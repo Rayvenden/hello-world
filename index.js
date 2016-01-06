@@ -12,22 +12,24 @@ fields: [
 
 Sealious.ConfigManager.set_config(
     "chip.channel.www_server", {
-        connections: {
-            https: {
+        connections: [
+            { // HTTPS section
                 port: 4430,
                 tls: {
                     key: fs.readFileSync("sealious.key"),
                     cert: fs.readFileSync("sealious.crt")
                 }
+            },
+            { // HTTP section
+                port: 8080,
+                routes: { cors: true }
             }
-        },
-        redirections: {
-            http2https: {
-                from: 8080,
-                to: 4430,
-                protocol: "https"
-            }
-        }
+        ],
+        redirections: [{ // HTTP 2 HTTPS redirection
+            from: 8080,
+            to: 4430,
+            protocol: "https"
+        }]
     }
 );
 
